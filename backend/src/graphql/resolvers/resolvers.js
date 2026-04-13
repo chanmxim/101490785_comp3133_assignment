@@ -1,7 +1,6 @@
 import User from "../../models/User.js"
 import Employee from "../../models/Employee.js"
 
-import { v2 as cloudinary } from 'cloudinary';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -59,18 +58,12 @@ const resolvers = {
         searchEmployeeByDesignationOrDepartment: async (_, {designation, department}, context) => {
             if (!context.user) throw new Error("Access Denied: You must be logged in.");
 
-            let employees = []
-
-            if (designation || department){
-            employees = await Employee.find({
+            return await Employee.find({
                 $or: [
-                    {designation: designation},
-                    {department: department}
+                    { designation: designation || { $exists: true } },
+                    { department: department || { $exists: true } }
                 ]
-            })
-            }
-
-            return employees
+            });
         }
     },
 
@@ -107,18 +100,6 @@ const resolvers = {
             if (!context.user) throw new Error("Access Denied: You must be logged in.");
 
             try {
-                let photoUrl = null
-
-                if (args.employee_photo) {
-                    // Upload to Cloudinary
-                    const uploadResponse = await cloudinary.uploader.upload(args.employee_photo, {
-                        folder: 'comp3133_employees'
-                    });
-                    
-                    // get URL
-                    photoUrl = uploadResponse.secure_url;
-                }
-
                 const newEmployee = new Employee({...args, employee_photo: photoUrl})
                 const savedEmployee = await newEmployee.save()
 

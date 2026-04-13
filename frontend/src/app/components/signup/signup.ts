@@ -9,7 +9,6 @@ import { SIGNUP_USER } from '../../graphql/operations';
   selector: 'app-signup',
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './signup.html',
-  styleUrl: './signup.css',
 })
 export class Signup {
   private fb = inject(FormBuilder);

@@ -8,8 +8,7 @@ import { LOGIN_USER } from '../../graphql/operations';
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  templateUrl: './login.html'
 })
 export class Login {
   private fb = inject(FormBuilder);
